@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TAPAROO Gate</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="container">
+        <!-- Etat 1: Non connecté -->
+        <div id="connect-screen" class="screen">
+            <h1>TAPAROO Gate</h1>
+            <p class="subtitle">Connectez votre TAP Wallet pour accéder au site</p>
+            <button id="connect-btn" class="btn-primary">
+                Connecter TAP Wallet
+            </button>
+            <p id="no-wallet-msg" class="error-msg hidden">
+                TAP Wallet non détecté.
+                <a href="https://github.com/Trac-Systems/tap-wallet-extension" target="_blank">Installer l'extension</a>
+            </p>
+        </div>
+
+        <!-- Etat 2: Vérification en cours -->
+        <div id="loading-screen" class="screen hidden">
+            <div class="spinner"></div>
+            <p>Vérification de votre solde TAPAROO...</p>
+        </div>
+
+        <!-- Etat 3: Accès refusé -->
+        <div id="denied-screen" class="screen hidden">
+            <div class="icon-denied">✕</div>
+            <h1>Accès refusé</h1>
+            <p class="subtitle">Vous devez posséder au moins <strong>1 TAPAROO</strong> pour accéder à ce site.</p>
+            <p class="balance-info">Votre solde : <span id="denied-balance">0</span> TAPAROO</p>
+            <button id="retry-btn" class="btn-secondary">Réessayer</button>
+        </div>
+
+        <!-- Etat 4: Accès autorisé -->
+        <div id="welcome-screen" class="screen hidden">
+            <div class="icon-success">✓</div>
+            <h1>Bienvenue !</h1>
+            <p class="subtitle">Vous êtes un holder TAPAROO vérifié</p>
+            <p class="balance-info">Votre solde : <span id="welcome-balance">0</span> TAPAROO</p>
+            <div class="welcome-content">
+                <h2>Contenu exclusif</h2>
+                <p>Félicitations ! Vous avez accès au contenu réservé aux holders TAPAROO.</p>
+                <!-- Ajoute ici le contenu que tu veux montrer aux holders -->
+            </div>
+            <button id="disconnect-btn" class="btn-secondary">Déconnecter</button>
+        </div>
+    </div>
+
+    <script src="app.js"></script>
+</body>
+</html>
