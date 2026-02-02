@@ -102,15 +102,14 @@ async function verifyTokenBalance(tracAddress) {
         const result = await response.json();
 
         if (result.authorized && result.decryptionKey) {
-            // Accès autorisé - déchiffrer le contenu secret
-            elements.welcomeBalance.textContent = result.balance;
-            decryptContent(result.decryptionKey);
-            showScreen('welcome');
+            // Accès autorisé - stocker la clé et rediriger vers la page membre
+            sessionStorage.setItem('tnk_decryption_key', result.decryptionKey);
+            sessionStorage.setItem('tnk_balance', result.balance.toString());
+            window.location.href = 'members.html';
         } else if (result.authorized) {
-            // Autorisé mais pas de clé (ne devrait pas arriver)
-            elements.welcomeBalance.textContent = result.balance;
-            elements.decryptedContent.innerHTML = '<p>Contenu non disponible</p>';
-            showScreen('welcome');
+            // Autorisé mais pas de clé (problème de config)
+            alert('Erreur: clé de déchiffrement non disponible');
+            showScreen('connect');
         } else {
             // Accès refusé
             elements.deniedBalance.textContent = result.balance || '0';
