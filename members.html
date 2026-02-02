@@ -93,7 +93,9 @@
     <script>
         // Récupérer la clé de déchiffrement depuis sessionStorage
         const decryptionKey = sessionStorage.getItem('tnk_decryption_key');
-        const userBalance = sessionStorage.getItem('tnk_balance') || '?';
+        // Formater le solde (arrondir à 2 décimales)
+        const rawBalance = parseFloat(sessionStorage.getItem('tnk_balance') || '0');
+        const userBalance = rawBalance.toLocaleString('fr-FR', { maximumFractionDigits: 2 });
 
         if (!decryptionKey) {
             // Pas de clé = pas autorisé
