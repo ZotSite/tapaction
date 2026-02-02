@@ -1,6 +1,6 @@
 // Configuration
 const CONFIG = {
-    TOKEN_TICKER: 'sora',
+    TOKEN_TICKER: '$sora',
     MIN_BALANCE: 1,
     // URL du Cloudflare Worker
     WORKER_URL: 'https://tapaction.aigpt974.workers.dev'
