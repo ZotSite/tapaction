@@ -37,7 +37,7 @@ body {
 h1 {
     font-size: 2.5rem;
     margin-bottom: 10px;
-    background: linear-gradient(90deg, #f39c12, #e74c3c);
+    background: linear-gradient(90deg, #00d4ff, #9b59b6);
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
     background-clip: text;
