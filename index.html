@@ -5,13 +5,15 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>SORA Gate</title>
     <link rel="stylesheet" href="style.css">
+    <!-- CryptoJS pour le déchiffrement AES -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/crypto-js/4.2.0/crypto-js.min.js"></script>
 </head>
 <body>
     <div class="container">
         <!-- Etat 1: Non connecté -->
         <div id="connect-screen" class="screen">
             <h1>SORA Gate</h1>
-            <p style="color: #666; font-size: 0.8rem;">v1.0.1</p>
+            <p style="color: #666; font-size: 0.8rem;">v2.0.0</p>
             <p class="subtitle">Connectez votre TAP Wallet pour accéder au site</p>
             <button id="connect-btn" class="btn-primary">
                 Connecter TAP Wallet
@@ -45,8 +47,11 @@
             <p class="balance-info">Votre solde : <span id="welcome-balance">0</span> SORA</p>
             <div class="welcome-content">
                 <h2>Contenu exclusif</h2>
-                <p>Félicitations ! Vous avez accès au contenu réservé aux holders SORA.</p>
-                <!-- Ajoute ici le contenu que tu veux montrer aux holders -->
+                <!-- Contenu chiffré - illisible sans la clé du Worker -->
+                <div id="encrypted-content" data-encrypted="U2FsdGVkX19kZWZhdWx0AAAAAAAAAABNb25Db250ZW51U2VjcmV0U09SQQ==" style="display:none;"></div>
+                <div id="decrypted-content">
+                    <p class="loading-decrypt">Déchiffrement en cours...</p>
+                </div>
             </div>
             <button id="disconnect-btn" class="btn-secondary">Déconnecter</button>
         </div>

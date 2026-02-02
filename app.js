@@ -20,13 +20,36 @@ const elements = {
     disconnectBtn: document.getElementById('disconnect-btn'),
     noWalletMsg: document.getElementById('no-wallet-msg'),
     deniedBalance: document.getElementById('denied-balance'),
-    welcomeBalance: document.getElementById('welcome-balance')
+    welcomeBalance: document.getElementById('welcome-balance'),
+    encryptedContent: document.getElementById('encrypted-content'),
+    decryptedContent: document.getElementById('decrypted-content')
 };
+
+// Contenu secret chiffré avec AES
+const ENCRYPTED_SECRET = 'U2FsdGVkX18sms7lrRhM895/OYaHo3iJOTKhXNbNDyKj6u5oZL0BTBve+62eUDYfQGiIPfAlJUdR8oWYi39PiL2jVffcnX1hZFnHw2zE420MxrD6mXDDzarMqnI8xNdOkgbBko/CeFPPfcoygbeYt4OICCWC7QSeavwR/hhlzc147spyCOy5tv0Q8o01AdjDrUDt8oV37GkCw4jBHfkTLlJOsRUWIztlilMr6lIVgg1EHNOIX7yhpwmEqzEJlp4LU7z/VbWw4ZPaDHbn2LscoLr49FZrJpsEzQFUCiiyN7bnjd4/Sv++fJYRDV2aK3Pj0on4JKkg4UdJWROA2Ef1yR21eT3kkLiRweelTWRGcdB+dgJZ71wYkMBkXEzIVydDk3z6rBet6s1fnWOFbO0J9iwgjs+ZG9mbLEvovyK09gM=';
 
 // Afficher un écran spécifique
 function showScreen(screenName) {
     Object.values(screens).forEach(screen => screen.classList.add('hidden'));
     screens[screenName].classList.remove('hidden');
+}
+
+// Déchiffrer le contenu secret avec la clé reçue du Worker
+function decryptContent(key) {
+    try {
+        // Déchiffrement AES avec CryptoJS
+        const decrypted = CryptoJS.AES.decrypt(ENCRYPTED_SECRET, key);
+        const plaintext = decrypted.toString(CryptoJS.enc.Utf8);
+
+        if (plaintext) {
+            elements.decryptedContent.innerHTML = plaintext;
+        } else {
+            elements.decryptedContent.innerHTML = '<p style="color: #e74c3c;">Erreur de déchiffrement</p>';
+        }
+    } catch (error) {
+        console.error('Erreur déchiffrement:', error);
+        elements.decryptedContent.innerHTML = '<p style="color: #e74c3c;">Erreur de déchiffrement</p>';
+    }
 }
 
 // Vérifier si TAP Wallet est installé
@@ -75,9 +98,15 @@ async function verifyTokenBalance(address) {
 
         const result = await response.json();
 
-        if (result.authorized) {
-            // Accès autorisé
+        if (result.authorized && result.decryptionKey) {
+            // Accès autorisé - déchiffrer le contenu secret
             elements.welcomeBalance.textContent = result.balance;
+            decryptContent(result.decryptionKey);
+            showScreen('welcome');
+        } else if (result.authorized) {
+            // Autorisé mais pas de clé (ne devrait pas arriver)
+            elements.welcomeBalance.textContent = result.balance;
+            elements.decryptedContent.innerHTML = '<p>Contenu non disponible</p>';
             showScreen('welcome');
         } else {
             // Accès refusé
