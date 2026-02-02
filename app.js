@@ -3,7 +3,7 @@ const CONFIG = {
     TOKEN_TICKER: 'taparoo',
     MIN_BALANCE: 1,
     // URL du Cloudflare Worker
-    WORKER_URL: 'https://tap-action.aigpt974.workers.dev'
+    WORKER_URL: 'https://tapaction.aigpt974.workers.dev'
 };
 
 // Elements DOM
@@ -31,7 +31,7 @@ function showScreen(screenName) {
 
 // Vérifier si TAP Wallet est installé
 function isTapWalletInstalled() {
-    return typeof window.tap !== 'undefined';
+    return typeof window.tapprotocol !== 'undefined';
 }
 
 // Connecter le wallet
@@ -43,7 +43,7 @@ async function connectWallet() {
 
     try {
         // Demander la connexion au wallet
-        const accounts = await window.tap.requestAccounts();
+        const accounts = await window.tapprotocol.requestAccounts();
 
         if (accounts && accounts.length > 0) {
             const address = accounts[0];
