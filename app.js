@@ -52,9 +52,9 @@ function decryptContent(key) {
     }
 }
 
-// Vérifier si TAP Wallet est installé
+// Vérifier si TAP Wallet est installé (avec support TRAC)
 function isTapWalletInstalled() {
-    return typeof window.tapprotocol !== 'undefined';
+    return typeof window.tracnetwork !== 'undefined';
 }
 
 // Connecter le wallet
@@ -65,11 +65,11 @@ async function connectWallet() {
     }
 
     try {
-        // D'abord connecter le wallet pour avoir les permissions
-        await window.tapprotocol.requestAccounts();
+        // Demander la connexion au réseau TRAC
+        await window.tracnetwork.requestAccount();
 
         // Récupérer l'adresse TRAC (différente de l'adresse Bitcoin)
-        const tracAddress = await window.tapprotocol.getTracAddress();
+        const tracAddress = await window.tracnetwork.getAddress();
 
         if (tracAddress) {
             await verifyTokenBalance(tracAddress);
@@ -138,7 +138,7 @@ document.addEventListener('DOMContentLoaded', () => {
     // Petit délai pour laisser le temps au wallet de s'injecter
     setTimeout(() => {
         if (!isTapWalletInstalled()) {
-            console.log('TAP Wallet non détecté');
+            console.log('TAP Wallet (TRAC network) non détecté');
         }
     }, 500);
 });
