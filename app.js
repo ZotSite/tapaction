@@ -1,6 +1,6 @@
 // Configuration
 const CONFIG = {
-    TOKEN_TICKER: '$sora',
+    TOKEN_NAME: 'TNK',
     MIN_BALANCE: 1,
     // URL du Cloudflare Worker
     WORKER_URL: 'https://tapaction.aigpt974.workers.dev'
@@ -65,12 +65,16 @@ async function connectWallet() {
     }
 
     try {
-        // Demander la connexion au wallet
-        const accounts = await window.tapprotocol.requestAccounts();
+        // D'abord connecter le wallet pour avoir les permissions
+        await window.tapprotocol.requestAccounts();
 
-        if (accounts && accounts.length > 0) {
-            const address = accounts[0];
-            await verifyTokenBalance(address);
+        // Récupérer l'adresse TRAC (différente de l'adresse Bitcoin)
+        const tracAddress = await window.tapprotocol.getTracAddress();
+
+        if (tracAddress) {
+            await verifyTokenBalance(tracAddress);
+        } else {
+            alert('Impossible de récupérer l\'adresse TRAC');
         }
     } catch (error) {
         console.error('Erreur connexion wallet:', error);
@@ -78,20 +82,19 @@ async function connectWallet() {
     }
 }
 
-// Vérifier le solde via le Cloudflare Worker
-async function verifyTokenBalance(address) {
+// Vérifier le solde TNK via le Cloudflare Worker
+async function verifyTokenBalance(tracAddress) {
     showScreen('loading');
 
     try {
-        // Appel au Worker Cloudflare pour vérifier le solde
-        const response = await fetch(`${CONFIG.WORKER_URL}/verify`, {
+        // Appel au Worker Cloudflare pour vérifier le solde TNK
+        const response = await fetch(`${CONFIG.WORKER_URL}/verify-tnk`, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json'
             },
             body: JSON.stringify({
-                address: address,
-                ticker: CONFIG.TOKEN_TICKER,
+                tracAddress: tracAddress,
                 minBalance: CONFIG.MIN_BALANCE
             })
         });
